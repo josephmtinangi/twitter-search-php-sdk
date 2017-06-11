@@ -1,16 +1,21 @@
 {
-    "name": "josephmtinangi/twitter-search-php-sdk",
-    "description": "A package for Twitter search API.",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Joseph Mtinangi",
-            "email": "josephmtinangi@gmail.com"
-        }
-    ],
-    "minimum-stability": "alpha",
-    "require": {
-        "guzzlehttp/guzzle": "^6.2"
+  "name": "josephmtinangi/twitter-search-php-sdk",
+  "description": "A package for Twitter search API.",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Joseph Mtinangi",
+      "email": "josephmtinangi@gmail.com"
     }
+  ],
+  "minimum-stability": "alpha",
+  "require": {
+    "guzzlehttp/guzzle": "^6.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Twitter\\": "Twitter/"
+    }
+  }
 }

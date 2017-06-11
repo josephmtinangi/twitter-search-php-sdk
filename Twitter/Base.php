@@ -41,7 +41,7 @@ class Base
             $url = "https://api.twitter.com/oauth2/token";
             $value = ['grant_type' => "client_credentials"
             ];
-            $header = array('Authorization' => 'Basic ' . base64_encode($this->token . ":" . $this->tokensecret),
+            $header = array('Authorization' => 'Basic ' . base64_encode($this->token . ":" . $this->tokenSecret),
                 "Content-Type" => "application/x-www-form-urlencoded;charset=UTF-8");
             $response = $this->client->post($url, ['query' => $value, 'headers' => $header]);
             $result = json_decode($response->getBody()->getContents());
@@ -59,12 +59,12 @@ class Base
      * @param array $post
      * @return mixed|\Psr\Http\Message\ResponseInterface
      */
-    protected function callTwitteAPIr($method, $request, $post = [])
+    protected function callTwitteAPI($method, $request, $post = [])
     {
         try {
             $this->prepareAccessToken();
             $url = self::API_URL . $request;
-            $header = array('Authorization' => 'Bearer ' . $this->accesstoken);
+            $header = array('Authorization' => 'Bearer ' . $this->accessToken);
             $response = $this->client->request($method, $url, array('query' => $post, 'headers' => $header));
             return json_decode($response->getBody()->getContents());
         } catch (RequestException $e) {
