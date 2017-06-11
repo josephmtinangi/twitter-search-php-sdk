@@ -21,4 +21,13 @@ class Base
         $this->client = new Client();
     }
 
+    /**
+     * @param $token
+     * @param $secret
+     */
+    public function setToken($token, $secret)
+    {
+        $this->token = $token;
+        $this->tokenSecret = $secret;
+    }
 }
