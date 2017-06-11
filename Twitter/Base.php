@@ -3,6 +3,7 @@
 namespace Twitter;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 
 class Base
 {
@@ -29,5 +30,53 @@ class Base
     {
         $this->token = $token;
         $this->tokenSecret = $secret;
+    }
+
+    /**
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function prepareAccessToken()
+    {
+        try {
+            $url = "https://api.twitter.com/oauth2/token";
+            $value = ['grant_type' => "client_credentials"
+            ];
+            $header = array('Authorization' => 'Basic ' . base64_encode($this->token . ":" . $this->tokensecret),
+                "Content-Type" => "application/x-www-form-urlencoded;charset=UTF-8");
+            $response = $this->client->post($url, ['query' => $value, 'headers' => $header]);
+            $result = json_decode($response->getBody()->getContents());
+
+            $this->accessToken = $result->access_token;
+        } catch (RequestException $e) {
+            $response = $this->statusCodeHandling($e);
+            return $response;
+        }
+    }
+
+    /**
+     * @param $method
+     * @param $request
+     * @param array $post
+     * @return mixed|\Psr\Http\Message\ResponseInterface
+     */
+    protected function callTwitteAPIr($method, $request, $post = [])
+    {
+        try {
+            $this->prepareAccessToken();
+            $url = self::API_URL . $request;
+            $header = array('Authorization' => 'Bearer ' . $this->accesstoken);
+            $response = $this->client->request($method, $url, array('query' => $post, 'headers' => $header));
+            return json_decode($response->getBody()->getContents());
+        } catch (RequestException $e) {
+            $response = $this->StatusCodeHandling($e);
+            return $response;
+        }
+    }
+
+    protected function statusCodeHandling($e)
+    {
+        $response = array("statuscode" => $e->getResponse()->getStatusCode(),
+            "error" => json_decode($e->getResponse()->getBody(true)->getContents()));
+        return $response;
     }
 }
